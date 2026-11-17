@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Farmer Applications</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .application-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #256f4a;
+        }
+
+        .application-card h3 {
+            color: #1f6846;
+            font-size: 26px;
+            margin-bottom: 22px;
+        }
+
+        .application-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-box {
+            background: #f7faf8;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .info-box strong {
+            display: block;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .info-box span {
+            color: #222;
+            font-size: 16px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: #9a6700;
+            background: #fff4cc;
+        }
+
+        .accepted {
+            color: #176b36;
+            background: #dff5e5;
+        }
+
+        .rejected {
+            color: #a12622;
+            background: #fde2e2;
+        }
+
+        .action-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-buttons a {
+            text-decoration: none;
+        }
+
+        .accept-btn,
+        .reject-btn {
+            border: none;
+            padding: 11px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .accept-btn {
+            background: #26734d;
+            color: white;
+        }
+
+        .accept-btn:hover {
+            background: #1d5b3c;
+        }
+
+        .reject-btn {
+            background: #d9534f;
+            color: white;
+        }
+
+        .reject-btn:hover {
+            background: #b83c38;
+        }
+
+        .empty-card {
+            background: white;
+            border-radius: 16px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 700px) {
+
+            .application-info {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .accept-btn,
+            .reject-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/buyer-dashboard">
+            Dashboard
+        </a>
+
+        <a href="/my-contracts">
+            My Contracts
+        </a>
+
+        <a href="/create-contract">
+            Create Contract
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="dashboard">
+
+    <div class="welcome">
+
+        <h1>
+            Farmer Applications
+        </h1>
+
+        <p>
+            View and manage applications submitted by farmers.
+        </p>
+
+    </div>
+
+
+    {% if applications %}
+
+        {% for application, contract, farmer in applications %}
+
+        <div class="application-card">
+
+            <div class="dashboard-icon">
+                📄
+            </div>
+
+            <h3>
+                {{ contract.crop }}
+            </h3>
+
+
+            <div class="application-info">
+
+                <div class="info-box">
+                    <strong>Farmer</strong>
+                    <span>{{ farmer.name }}</span>
+                </div>
+
+
+                <div class="info-box">
+                    <strong>Email</strong>
+                    <span>{{ farmer.email }}</span>
+                </div>
+
+
+                <div class="info-box">
+                    <strong>Quantity</strong>
+                    <span>{{ contract.quantity }}</span>
+                </div>
+
+
+                <div class="info-box">
+                    <strong>Price</strong>
+                    <span>₹{{ contract.price }}</span>
+                </div>
+
+
+                <div class="info-box">
+                    <strong>Quality</strong>
+                    <span>{{ contract.quality }}</span>
+                </div>
+
+
+                <div class="info-box">
+                    <strong>Delivery Location</strong>
+                    <span>{{ contract.delivery_location }}</span>
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>Application Status</strong>
+
+                    {% if application.status == "Accepted" %}
+
+                        <span class="status accepted">
+                            Accepted
+                        </span>
+
+                    {% elif application.status == "Rejected" %}
+
+                        <span class="status rejected">
+                            Rejected
+                        </span>
+
+                    {% else %}
+
+                        <span class="status pending">
+                            Pending
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            {% if application.status == "Pending" %}
+
+            <div class="action-buttons">
+
+                <a href="/buyer-application/{{ application.id }}/accept">
+
+                    <button class="accept-btn">
+                        ✓ Accept Application
+                    </button>
+
+                </a>
+
+
+                <a href="/buyer-application/{{ application.id }}/reject">
+
+                    <button class="reject-btn">
+                        ✕ Reject Application
+                    </button>
+
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="empty-card">
+
+            <div class="empty-icon">
+                📄
+            </div>
+
+            <h2>
+                No Applications
+            </h2>
+
+            <p>
+                No farmers have applied for your contracts yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        {% if user.role == "farmer" %}
+
+            <a href="/farmer-dashboard">
+                Dashboard
+            </a>
+
+            <a href="/contracts">
+                Contracts
+            </a>
+
+            <a href="/predict">
+                Price Prediction
+            </a>
+
+        {% elif user.role == "buyer" %}
+
+            <a href="/buyer-dashboard">
+                Dashboard
+            </a>
+
+            <a href="/my-contracts">
+                My Contracts
+            </a>
+
+            <a href="/create-contract">
+                Create Contract
+            </a>
+
+            <a href="/buyer-applications">
+                Applications
+            </a>
+
+        {% endif %}
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="dashboard">
+
+    <div class="welcome">
+
+        <h1>
+            My Profile
+        </h1>
+
+        <p>
+            View your account information.
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-icon">
+            👤
+        </div>
+
+        <h3>
+            Account Information
+        </h3>
+
+        <p>
+            <strong>Name:</strong>
+            {{ user.name }}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            {{ user.email }}
+        </p>
+
+        <p>
+            <strong>Role:</strong>
+            {{ user.role|capitalize }}
+        </p>
+
+        <p>
+            <strong>Account ID:</strong>
+            {{ user.id }}
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

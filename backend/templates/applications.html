@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Applications</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/farmer-dashboard">
+            Dashboard
+        </a>
+
+        <a href="/contracts">
+            Contracts
+        </a>
+
+        <a href="/predict">
+            Price Prediction
+        </a>
+
+        <a href="/profile">
+            Profile
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<div class="dashboard">
+
+    <div class="welcome">
+
+        <h1>
+            My Applications
+        </h1>
+
+        <p>
+            Track the contracts you have applied for.
+        </p>
+
+    </div>
+
+
+
+    {% if applications %}
+
+
+        {% for item in applications %}
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                🤝
+            </div>
+
+
+            {% if item.contract %}
+
+            <h3>
+                {{ item.contract.crop }}
+            </h3>
+
+
+            <p>
+                <strong>Buyer:</strong>
+                {{ item.contract.buyer_name }}
+            </p>
+
+
+            <p>
+                <strong>Quantity:</strong>
+                {{ item.contract.quantity }}
+            </p>
+
+
+            <p>
+                <strong>Price:</strong>
+                ₹{{ item.contract.price }}
+            </p>
+
+
+            <p>
+                <strong>Quality:</strong>
+                {{ item.contract.quality }}
+            </p>
+
+
+            <p>
+                <strong>Delivery Location:</strong>
+                {{ item.contract.delivery_location }}
+            </p>
+
+
+            <p>
+                <strong>Application Status:</strong>
+                {{ item.application.status }}
+            </p>
+
+
+            {% else %}
+
+            <p>
+                Contract information is no longer available.
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📄
+            </div>
+
+            <h3>
+                No Applications Yet
+            </h3>
+
+            <p>
+                You have not applied for any contracts yet.
+            </p>
+
+            <a href="/contracts">
+
+                <button>
+                    Browse Contracts
+                </button>
+
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>

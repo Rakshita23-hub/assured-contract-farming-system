@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Contracts</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/buyer-dashboard">
+            Dashboard
+        </a>
+
+        <a href="/my-contracts">
+            My Contracts
+        </a>
+
+        <a href="/create-contract">
+            Create Contract
+        </a>
+
+        <a href="/buyer-applications">
+            Applications
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="dashboard">
+
+    <div class="welcome">
+
+        <h1>
+            My Contracts
+        </h1>
+
+        <p>
+            View the agricultural contracts you have created.
+        </p>
+
+    </div>
+
+
+    {% if contracts %}
+
+        {% for contract in contracts %}
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📋
+            </div>
+
+            <h3>
+                {{ contract.crop }}
+            </h3>
+
+            <p>
+                <strong>Quantity:</strong>
+                {{ contract.quantity }}
+            </p>
+
+            <p>
+                <strong>Price:</strong>
+                ₹{{ contract.price }}
+            </p>
+
+            <p>
+                <strong>Quality:</strong>
+                {{ contract.quality }}
+            </p>
+
+            <p>
+                <strong>Delivery Location:</strong>
+                {{ contract.delivery_location }}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+
+                {% if contract.status == "Accepted" %}
+
+                    <span style="color: green; font-weight: bold;">
+                        Accepted
+                    </span>
+
+                {% else %}
+
+                    <span style="color: #e67e22; font-weight: bold;">
+                        {{ contract.status }}
+                    </span>
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📄
+            </div>
+
+            <h3>
+                No Contracts
+            </h3>
+
+            <p>
+                You have not created any contracts yet.
+            </p>
+
+            <a href="/create-contract">
+
+                <button>
+                    Create Contract
+                </button>
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

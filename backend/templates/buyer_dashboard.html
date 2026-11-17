@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Buyer Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/buyer-dashboard">
+            Dashboard
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- DASHBOARD -->
+
+<div class="dashboard">
+
+    <div class="welcome">
+
+        <h1>
+            Welcome, {{ user.name }}!
+        </h1>
+
+        <p>
+            Manage your agricultural contracts from your dashboard.
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+
+        <!-- CREATE CONTRACT -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📝
+            </div>
+
+            <h3>
+                Create Contract
+            </h3>
+
+            <p>
+                Create a new contract and specify crop,
+                quantity, price and delivery details.
+            </p>
+
+            <a href="/create-contract">
+
+                <button>
+                    Create Contract
+                </button>
+
+            </a>
+
+        </div>
+
+
+        <!-- MY CONTRACTS -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📋
+            </div>
+
+            <h3>
+                My Contracts
+            </h3>
+
+            <p>
+                View and manage the contracts created by you.
+            </p>
+
+            <a href="/my-contracts">
+
+                <button>
+                    My Contracts
+                </button>
+
+            </a>
+
+        </div>
+
+
+        <!-- APPLICATIONS -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                🤝
+            </div>
+
+            <h3>
+                Farmer Applications
+            </h3>
+
+            <p>
+                View applications submitted by farmers
+                for your contracts.
+            </p>
+
+            <a href="/buyer-applications">
+
+                <button>
+                    View Applications
+                </button>
+
+            </a>
+
+        </div>
+
+
+        <!-- PROFILE -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                👤
+            </div>
+
+            <h3>
+                My Profile
+            </h3>
+
+            <p>
+                View your buyer account information.
+            </p>
+
+            <a href="/profile">
+
+                <button>
+                    My Profile
+                </button>
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

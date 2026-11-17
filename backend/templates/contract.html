@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Available Contracts</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+        <a href="/farmer-dashboard">Dashboard</a>
+        <a href="/predict">Price Prediction</a>
+        <a href="/applications">My Applications</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+</nav>
+
+
+<div class="dashboard">
+
+    <div class="welcome">
+
+        <h1>Available Contracts</h1>
+
+        <p>
+            Browse contracts created by buyers and apply for suitable contracts.
+        </p>
+
+    </div>
+
+
+    {% if contracts %}
+
+        {% for contract in contracts %}
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📋
+            </div>
+
+            <h2>
+                {{ contract.crop }}
+            </h2>
+
+            <p>
+                <strong>Buyer:</strong>
+                {{ contract.buyer_name }}
+            </p>
+
+            <p>
+                <strong>Quantity:</strong>
+                {{ contract.quantity }}
+            </p>
+
+            <p>
+                <strong>Price:</strong>
+                ₹{{ contract.price }}
+            </p>
+
+            <p>
+                <strong>Quality:</strong>
+                {{ contract.quality }}
+            </p>
+
+            <p>
+                <strong>Delivery Location:</strong>
+                {{ contract.delivery_location }}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{ contract.status }}
+            </p>
+
+
+            {% if contract.status == "Available" %}
+
+            <a href="/apply/{{ contract.id }}">
+                <button>
+                    Apply for Contract
+                </button>
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📄
+            </div>
+
+            <h2>
+                No Contracts Available
+            </h2>
+
+            <p>
+                There are currently no contracts available from buyers.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

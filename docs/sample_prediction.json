@@ -1,0 +1,16 @@
+{
+  "State": "Gujarat",
+  "District": "Amreli",
+  "Market": "Damnagar",
+  "Commodity": "Bhindi",
+  "Variety": "Bhindi(Ladies Finger)",
+  "Grade": "FAQ",
+  "Min Price": 4100.0,
+  "Max Price": 4500.0,
+  "Year": 2023,
+  "Month": 7,
+  "Day": 27,
+  "DayOfWeek": 3,
+  "Quarter": 3,
+  "Season": "Kharif"
+}

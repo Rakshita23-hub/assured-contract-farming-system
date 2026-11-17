@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Farmer Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION BAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/farmer-dashboard">
+            Dashboard
+        </a>
+
+        <a href="/contracts">
+            Contracts
+        </a>
+
+        <a href="/predict">
+            Price Prediction
+        </a>
+
+        <a href="/applications">
+            My Applications
+        </a>
+
+        <a href="/profile">
+            Profile
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<div class="dashboard">
+
+
+    <!-- WELCOME -->
+
+    <div class="welcome">
+
+        <h1>
+            Welcome, {{ user.name }}!
+        </h1>
+
+        <p>
+            Manage your farming activities from your dashboard.
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         DASHBOARD CARDS
+    ================================================== -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- AVAILABLE CONTRACTS -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                🤝
+            </div>
+
+            <h3>
+                Available Contracts
+            </h3>
+
+            <p>
+                View available contracts from buyers and apply
+                for suitable farming opportunities.
+            </p>
+
+            <a href="/contracts">
+
+                <button>
+                    Available Contracts
+                </button>
+
+            </a>
+
+        </div>
+
+
+
+        <!-- PRICE PREDICTION -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📈
+            </div>
+
+            <h3>
+                Price Prediction
+            </h3>
+
+            <p>
+                Predict the expected market price of your
+                agricultural crop using machine learning.
+            </p>
+
+            <a href="/predict">
+
+                <button>
+                    Price Prediction
+                </button>
+
+            </a>
+
+        </div>
+
+
+
+        <!-- MY APPLICATIONS -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                📋
+            </div>
+
+            <h3>
+                My Applications
+            </h3>
+
+            <p>
+                Track the contracts you have applied for
+                and check your application status.
+            </p>
+
+            <a href="/applications">
+
+                <button>
+                    My Applications
+                </button>
+
+            </a>
+
+        </div>
+
+
+
+        <!-- MY PROFILE -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                👤
+            </div>
+
+            <h3>
+                My Profile
+            </h3>
+
+            <p>
+                View your farmer account details and
+                registered information.
+            </p>
+
+            <a href="/profile">
+
+                <button>
+                    My Profile
+                </button>
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Assured Farming</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">🌾 Assured Farming</div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+    </div>
+</nav>
+
+<div class="form-container">
+
+    <div class="form-card">
+
+        <h2>Create Account</h2>
+
+        <p class="form-subtitle">
+            Register as a farmer or buyer
+        </p>
+
+        <form method="POST">
+
+            <label>Name</label>
+            <input type="text" name="name" required>
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <label>Register As</label>
+
+            <select name="role" required>
+                <option value="">Select role</option>
+                <option value="farmer">Farmer</option>
+                <option value="buyer">Buyer</option>
+            </select>
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="account-link">
+            Already have an account?
+            <a href="/login">Login</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

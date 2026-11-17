@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Contract | Assured Farming</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #333;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 72px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 65px;
+            border-bottom: 1px solid #e3e7e4;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #17643f;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #222;
+            font-size: 16px;
+        }
+
+        .nav-links a:hover {
+            color: #17643f;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .page-container {
+            max-width: 1150px;
+            margin: 55px auto;
+            padding: 0 25px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            color: #17643f;
+            font-size: 40px;
+            margin: 0 0 10px;
+        }
+
+        .page-header p {
+            color: #68736d;
+            font-size: 18px;
+            margin: 0;
+        }
+
+
+        /* ================= FORM CARD ================= */
+
+        .form-card {
+            background: white;
+            border-radius: 18px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e5eae7;
+        }
+
+        .form-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 32px;
+        }
+
+        .form-icon {
+            width: 55px;
+            height: 55px;
+            background: #e8f3ed;
+            border-radius: 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 27px;
+        }
+
+        .form-title h2 {
+            margin: 0;
+            color: #17643f;
+            font-size: 23px;
+        }
+
+        .form-title p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+
+        /* ================= FORM ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 600;
+            color: #37413c;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 15px;
+
+            border: 1px solid #d7ddd9;
+            border-radius: 8px;
+
+            font-size: 15px;
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #17643f;
+            box-shadow: 0 0 0 3px rgba(23, 100, 63, 0.08);
+        }
+
+        input::placeholder {
+            color: #9a9f9c;
+        }
+
+
+        /* ================= BUTTON ================= */
+
+        .form-actions {
+            margin-top: 32px;
+            padding-top: 25px;
+            border-top: 1px solid #edf0ee;
+
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .create-btn {
+            background: #17643f;
+            color: white;
+
+            border: none;
+            border-radius: 9px;
+
+            padding: 13px 28px;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .create-btn:hover {
+            background: #125333;
+            transform: translateY(-1px);
+        }
+
+
+        /* ================= INFO ================= */
+
+        .info-box {
+            margin-top: 25px;
+            padding: 18px 20px;
+
+            background: #eef7f2;
+            border-left: 4px solid #17643f;
+
+            border-radius: 8px;
+
+            color: #53605a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .page-container {
+                margin: 35px auto;
+                padding: 0 18px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .form-actions {
+                justify-content: stretch;
+            }
+
+            .create-btn {
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/buyer-dashboard">
+            Dashboard
+        </a>
+
+        <a href="/my-contracts">
+            My Contracts
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <h1>
+            Create New Contract
+        </h1>
+
+        <p>
+            Provide the details of your agricultural contract.
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= FORM CARD ================= -->
+
+    <div class="form-card">
+
+        <div class="form-title">
+
+            <div class="form-icon">
+                📋
+            </div>
+
+            <div>
+
+                <h2>
+                    Contract Details
+                </h2>
+
+                <p>
+                    Enter the agreement details for farmers.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form method="POST"
+              action="/create-contract">
+
+
+            <div class="form-grid">
+
+
+                <!-- CROP -->
+
+                <div class="form-group">
+
+                    <label for="crop">
+                        Crop Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="crop"
+                        name="crop"
+                        placeholder="Example: Wheat"
+                        required>
+
+                </div>
+
+
+
+                <!-- QUANTITY -->
+
+                <div class="form-group">
+
+                    <label for="quantity">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="text"
+                        id="quantity"
+                        name="quantity"
+                        placeholder="Example: 500 kg"
+                        required>
+
+                </div>
+
+
+
+                <!-- PRICE -->
+
+                <div class="form-group">
+
+                    <label for="price">
+                        Price
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        placeholder="Enter contract price"
+                        min="0"
+                        step="0.01"
+                        required>
+
+                </div>
+
+
+
+                <!-- QUALITY -->
+
+                <div class="form-group">
+
+                    <label for="quality">
+                        Quality Grade
+                    </label>
+
+                    <select id="quality"
+                            name="quality"
+                            required>
+
+                        <option value="">
+                            Select quality
+                        </option>
+
+                        <option value="Grade A">
+                            Grade A
+                        </option>
+
+                        <option value="Grade B">
+                            Grade B
+                        </option>
+
+                        <option value="Grade C">
+                            Grade C
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- DELIVERY LOCATION -->
+
+                <div class="form-group full-width">
+
+                    <label for="delivery_location">
+                        Delivery Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="delivery_location"
+                        name="delivery_location"
+                        placeholder="Example: Vijayapura"
+                        required>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="create-btn">
+
+                    Create Contract
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div class="info-box">
+
+            <strong>Note:</strong>
+            Once created, this contract will be visible to farmers
+            under the available contracts section.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>
