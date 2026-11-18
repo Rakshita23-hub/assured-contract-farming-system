@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Crop Price Prediction - Assured Farming</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .prediction-container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .prediction-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .prediction-header h1 {
+            color: #176b4d;
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .prediction-header p {
+            color: #666;
+            font-size: 17px;
+        }
+
+        .prediction-card {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 13px;
+            border: 1px solid #d6d6d6;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: #176b4d;
+        }
+
+        .predict-button {
+            margin-top: 28px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 9px;
+            background: #176b4d;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .predict-button:hover {
+            background: #12543c;
+        }
+
+        .result-card {
+            margin-top: 30px;
+            padding: 30px;
+            background: #eef9f2;
+            border: 1px solid #b9dfc4;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .result-card h2 {
+            color: #176b4d;
+            margin-bottom: 20px;
+        }
+
+        .predicted-price {
+            font-size: 42px;
+            font-weight: bold;
+            color: #176b4d;
+            margin: 15px 0;
+        }
+
+        .result-info {
+            color: #555;
+            margin: 7px 0;
+        }
+
+        .error-card {
+            margin-top: 25px;
+            padding: 18px;
+            background: #fff0f0;
+            border: 1px solid #f1b5b5;
+            border-radius: 10px;
+            color: #b42318;
+        }
+
+        .info-box {
+            margin-top: 25px;
+            background: #f6f8f7;
+            padding: 18px;
+            border-radius: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .prediction-header h1 {
+                font-size: 28px;
+            }
+
+            .prediction-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 Assured Farming
+    </div>
+
+    <div class="nav-links">
+
+        {% if session.get("role") == "farmer" %}
+
+            <a href="/farmer-dashboard">
+                Dashboard
+            </a>
+
+            <a href="/contracts">
+                Contracts
+            </a>
+
+        {% elif session.get("role") == "buyer" %}
+
+            <a href="/buyer-dashboard">
+                Dashboard
+            </a>
+
+            <a href="/my-contracts">
+                My Contracts
+            </a>
+
+        {% endif %}
+
+        <a href="/crop-price-prediction">
+            Price Prediction
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="prediction-container">
+
+    <div class="prediction-header">
+
+        <h1>
+            🌱 Crop Price Prediction
+        </h1>
+
+        <p>
+            Estimate the expected market price of your selected crop.
+        </p>
+
+    </div>
+
+
+    <div class="prediction-card">
+
+        <form method="POST"
+              action="/crop-price-prediction">
+
+            <div class="form-grid">
+
+                <!-- STATE -->
+
+                <div class="form-group">
+
+                    <label>
+                        State
+                    </label>
+
+                    <select name="state"
+                            id="state"
+                            required>
+
+                        <option value="">
+                            Select State
+                        </option>
+
+                        {% for state in states %}
+
+                        <option value="{{ state }}">
+                            {{ state }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- DISTRICT -->
+
+                <div class="form-group">
+
+                    <label>
+                        District
+                    </label>
+
+                    <select name="district"
+                            id="district"
+                            required>
+
+                        <option value="">
+                            Select District
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- MARKET -->
+
+                <div class="form-group">
+
+                    <label>
+                        Market
+                    </label>
+
+                    <select name="market"
+                            id="market"
+                            required>
+
+                        <option value="">
+                            Select Market
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- CROP -->
+
+                <div class="form-group">
+
+                    <label>
+                        Commodity / Crop
+                    </label>
+
+                    <select name="commodity"
+                            required>
+
+                        <option value="">
+                            Select Crop
+                        </option>
+
+                        {% for commodity in commodities %}
+
+                        <option value="{{ commodity }}">
+                            {{ commodity }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- VARIETY -->
+
+                <div class="form-group">
+
+                    <label>
+                        Variety
+                    </label>
+
+                    <select name="variety"
+                            required>
+
+                        <option value="">
+                            Select Variety
+                        </option>
+
+                        {% for variety in varieties %}
+
+                        <option value="{{ variety }}">
+                            {{ variety }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- GRADE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Grade
+                    </label>
+
+                    <select name="grade"
+                            required>
+
+                        <option value="">
+                            Select Grade
+                        </option>
+
+                        {% for grade in grades %}
+
+                        <option value="{{ grade }}">
+                            {{ grade }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEASON -->
+
+                <div class="form-group">
+
+                    <label>
+                        Season
+                    </label>
+
+                    <select name="season"
+                            required>
+
+                        <option value="">
+                            Select Season
+                        </option>
+
+                        <option value="Monsoon">
+                            Monsoon
+                        </option>
+
+                        <option value="Winter">
+                            Winter
+                        </option>
+
+                        <option value="Summer">
+                            Summer
+                        </option>
+
+                        <option value="Post-Monsoon">
+                            Post-Monsoon
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Future Date
+                    </label>
+
+                    <input type="date"
+                           name="future_date"
+                           required>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit"
+                    class="predict-button">
+
+                🔮 Predict Crop Price
+
+            </button>
+
+        </form>
+
+
+        {% if prediction is not none %}
+
+        <div class="result-card">
+
+            <h2>
+                🌾 Prediction Result
+            </h2>
+
+            <p class="result-info">
+                <strong>Crop:</strong>
+                {{ crop }}
+            </p>
+
+            <p class="result-info">
+                <strong>Market:</strong>
+                {{ market }}
+            </p>
+
+            <p class="result-info">
+                <strong>Date:</strong>
+                {{ prediction_date }}
+            </p>
+
+            <div class="predicted-price">
+                ₹ {{ prediction }}
+            </div>
+
+            <p>
+                Estimated Crop Price per Quintal
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if error %}
+
+        <div class="error-card">
+
+            <strong>
+                Prediction Error:
+            </strong>
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <div class="info-box">
+
+            <strong>Note:</strong>
+
+            This prediction is generated using the trained
+            machine learning model and historical agricultural
+            market data. It is an estimated value and not a
+            guaranteed market or contract price.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const districtMap =
+    {{ district_map | tojson }};
+
+const marketMap =
+    {{ market_map | tojson }};
+
+
+const stateSelect =
+    document.getElementById("state");
+
+const districtSelect =
+    document.getElementById("district");
+
+const marketSelect =
+    document.getElementById("market");
+
+
+/* STATE → DISTRICT */
+
+stateSelect.addEventListener("change", function () {
+
+    const selectedState =
+        this.value;
+
+    districtSelect.innerHTML =
+        '<option value="">Select District</option>';
+
+    marketSelect.innerHTML =
+        '<option value="">Select Market</option>';
+
+    const districts =
+        districtMap[selectedState] || [];
+
+    districts.forEach(function (district) {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            district;
+
+        option.textContent =
+            district;
+
+        districtSelect.appendChild(option);
+
+    });
+
+});
+
+
+/* DISTRICT → MARKET */
+
+districtSelect.addEventListener("change", function () {
+
+    const selectedDistrict =
+        this.value;
+
+    marketSelect.innerHTML =
+        '<option value="">Select Market</option>';
+
+    const markets =
+        marketMap[selectedDistrict] || [];
+
+    markets.forEach(function (market) {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            market;
+
+        option.textContent =
+            market;
+
+        marketSelect.appendChild(option);
+
+    });
+
+});
+
+</script>
+
+</body>
+
+</html>

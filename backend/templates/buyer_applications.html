@@ -126,6 +126,41 @@
             margin-bottom: 15px;
         }
 
+        /* Crop price prediction card */
+
+        .prediction-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #256f4a;
+        }
+
+        .prediction-card h2 {
+            color: #1f6846;
+            margin-bottom: 10px;
+        }
+
+        .prediction-card p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .prediction-btn {
+            display: inline-block;
+            background: #26734d;
+            color: white;
+            text-decoration: none;
+            padding: 11px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .prediction-btn:hover {
+            background: #1d5b3c;
+        }
+
         @media (max-width: 700px) {
 
             .application-info {
@@ -170,6 +205,10 @@
             Create Contract
         </a>
 
+        <a href="/crop-price-prediction">
+            Crop Price Prediction
+        </a>
+
         <a href="/logout">
             Logout
         </a>
@@ -190,6 +229,32 @@
         <p>
             View and manage applications submitted by farmers.
         </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         CROP PRICE PREDICTION
+    ====================================================== -->
+
+    <div class="prediction-card">
+
+        <div class="dashboard-icon">
+            🌾
+        </div>
+
+        <h2>
+            Crop Price Prediction
+        </h2>
+
+        <p>
+            Predict the expected market price of agricultural crops
+            for a selected future date.
+        </p>
+
+        <a href="/crop-price-prediction" class="prediction-btn">
+            Predict Crop Price
+        </a>
 
     </div>
 

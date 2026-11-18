@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
 import joblib
 import pandas as pd
+import numpy as np
+import os
 
 # =========================================================
 # PATHS
@@ -48,6 +50,8 @@ try:
 except Exception as e:
     print("WARNING: Random Forest model could not be loaded.")
     print(e)
+
+
 
 
 # =========================================================
@@ -423,11 +427,130 @@ def applications():
         applications=rows
     )
 
+# =========================================================
+# CROP PRICE PREDICTION MODEL
+# =========================================================
 
+CROP_PRICE_MODEL_PATH = BASE_DIR / "model" / "best_crop_price_model.pkl"
+CROP_PRICE_DATA_PATH = BASE_DIR / "data" / "updated_agriculture_data.csv"
+
+crop_price_model = None
+crop_price_dataset = None
+
+try:
+    crop_price_model = joblib.load(CROP_PRICE_MODEL_PATH)
+    crop_price_dataset = pd.read_csv(CROP_PRICE_DATA_PATH)
+
+    print("Crop Price Prediction model loaded successfully!")
+
+except Exception as e:
+    print("Warning: Crop Price Prediction model could not be loaded.")
+    print(e)
+
+
+# =========================================================
+# CROP PRICE DROPDOWN DATA
+# =========================================================
+
+crop_states = []
+crop_districts = []
+crop_markets = []
+crop_commodities = []
+crop_varieties = []
+crop_grades = []
+crop_seasons = []
+
+district_map = {}
+market_map = {}
+
+if crop_price_dataset is not None:
+
+    crop_states = sorted(
+        crop_price_dataset["State"]
+        .dropna()
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    crop_districts = sorted(
+        crop_price_dataset["District"]
+        .dropna()
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    crop_markets = sorted(
+        crop_price_dataset["Market"]
+        .dropna()
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    crop_commodities = sorted(
+        crop_price_dataset["Commodity"]
+        .dropna()
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    crop_varieties = sorted(
+        crop_price_dataset["Variety"]
+        .dropna()
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    crop_grades = sorted(
+        crop_price_dataset["Grade"]
+        .dropna()
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    crop_seasons = sorted(
+        crop_price_dataset["Season"]
+        .dropna()
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    district_map = (
+        crop_price_dataset
+        .groupby("State")["District"]
+        .apply(
+            lambda x: sorted(
+                x.dropna()
+                .astype(str)
+                .unique()
+                .tolist()
+            )
+        )
+        .to_dict()
+    )
+
+    market_map = (
+        crop_price_dataset
+        .groupby("District")["Market"]
+        .apply(
+            lambda x: sorted(
+                x.dropna()
+                .astype(str)
+                .unique()
+                .tolist()
+            )
+        )
+        .to_dict()
+    )
 # =========================================================
 # PROFILE - BOTH FARMER AND BUYER
 # =========================================================
-
 @app.route("/profile")
 def profile():
 
@@ -746,7 +869,129 @@ def predict():
         error=error
     )
 
+# =========================================================
+# CROP PRICE PREDICTION
+# Works for BOTH Farmer and Buyer
+# =========================================================
 
+@app.route("/crop-price-prediction", methods=["GET", "POST"])
+def crop_price_prediction():
+
+    # User must be logged in
+    if "user_id" not in session:
+        return redirect("/login")
+
+    prediction = None
+    error = None
+    crop = None
+    market = None
+    prediction_date = None
+
+    if request.method == "POST":
+
+        try:
+            state = request.form.get("state")
+            district = request.form.get("district")
+            market = request.form.get("market")
+            commodity = request.form.get("commodity")
+            variety = request.form.get("variety")
+            grade = request.form.get("grade")
+            season = request.form.get("season")
+
+            future_date = pd.to_datetime(
+                request.form.get("future_date")
+            )
+
+            data = pd.DataFrame([{
+                "State": state,
+                "District": district,
+                "Market": market,
+                "Commodity": commodity,
+                "Variety": variety,
+                "Grade": grade,
+                "Season": season
+            }])
+
+            data["Year"] = future_date.year
+            data["Month"] = future_date.month
+            data["Day"] = future_date.day
+            data["DayOfWeek"] = future_date.dayofweek
+            data["Quarter"] = future_date.quarter
+
+            data["Month_sin"] = np.sin(
+                2 * np.pi * future_date.month / 12
+            )
+
+            data["Month_cos"] = np.cos(
+                2 * np.pi * future_date.month / 12
+            )
+
+            data["DayOfYear_sin"] = np.sin(
+                2 * np.pi * future_date.dayofyear / 365.25
+            )
+
+            data["DayOfYear_cos"] = np.cos(
+                2 * np.pi * future_date.dayofyear / 365.25
+            )
+
+            features = [
+                "State",
+                "District",
+                "Market",
+                "Commodity",
+                "Variety",
+                "Grade",
+                "Season",
+                "Year",
+                "Month",
+                "Day",
+                "DayOfWeek",
+                "Quarter",
+                "Month_sin",
+                "Month_cos",
+                "DayOfYear_sin",
+                "DayOfYear_cos"
+            ]
+
+            if crop_price_model is None:
+                raise Exception(
+                    "Crop price prediction model is not loaded."
+                )
+
+            predicted_price = crop_price_model.predict(
+                data[features]
+            )[0]
+
+            prediction = round(
+                float(predicted_price),
+                2
+            )
+
+            crop = commodity
+
+            prediction_date = future_date.strftime(
+                "%d-%m-%Y"
+            )
+
+        except Exception as e:
+            error = str(e)
+
+    return render_template(
+        "crop_price_prediction.html",
+        prediction=prediction,
+        error=error,
+        crop=crop,
+        market=market,
+        prediction_date=prediction_date,
+        states=crop_states,
+        districts=crop_districts,
+        markets=crop_markets,
+        commodities=crop_commodities,
+        varieties=crop_varieties,
+        grades=crop_grades,
+        district_map=district_map,
+        market_map=market_map
+    )
 # =========================================================
 # ERROR HANDLERS
 # =========================================================
